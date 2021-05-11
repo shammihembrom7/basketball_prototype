@@ -14,6 +14,8 @@ public class Gameplay : MonoBehaviour
     [SerializeField] Rigidbody ball_rb;
     bool aiming;
 
+    TrajectoryMaker trajectory;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +23,8 @@ public class Gameplay : MonoBehaviour
         centerSx = Screen.width / 2;
         centerSy = Screen.height / 2;
         balancerUnit = (float)20 / Screen.height;
+
+        trajectory = GetComponent<TrajectoryMaker>();
     }
 
     // Update is called once per frame
@@ -41,6 +45,8 @@ public class Gameplay : MonoBehaviour
         aiming = true;
         startNx = Input.mousePosition.x - centerSx;
         startNy = Input.mousePosition.y - centerSy;
+
+        trajectory.Show();
     }
 
     void Drag()
@@ -50,6 +56,8 @@ public class Gameplay : MonoBehaviour
 
         deltaNx = ((currentNx - startNx) * balancerUnit);
         deltaNy = ((currentNy - startNy) * balancerUnit);
+
+        trajectory.UpdateDots(ball_rb.transform.position, new Vector3(deltaNx, deltaNy,0) * -120,ball_rb);
     }
 
     void Release()
@@ -64,5 +72,7 @@ public class Gameplay : MonoBehaviour
             currentNx = 0;
             currentNy = 0;
         }
+
+        trajectory.Hide();
     }
 }
