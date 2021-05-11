@@ -1103,13 +1103,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e67493ff428c4b4c98f289b22afbec2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotsNumber: 15
-  dotsParent: {fileID: 1731468220}
-  dotPrefab: {fileID: 2681833874312924979, guid: 5b80b9bd1e738014e97dc361defd1798,
+  dots_count: 15
+  dots_parent: {fileID: 1731468220}
+  dot_prefab: {fileID: 2681833874312924979, guid: 5b80b9bd1e738014e97dc361defd1798,
     type: 3}
-  dotSpacing: 0.001
-  dotMinScale: 0.242
-  dotMaxScale: 0.865
+  dots_min_scale: 0.3
+  dots_max_scale: 1
 --- !u!1 &1731468220
 GameObject:
   m_ObjectHideFlags: 0

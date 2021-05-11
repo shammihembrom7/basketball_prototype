@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class TrajectoryMaker : MonoBehaviour
 {
-	[SerializeField] int dotsNumber;
-	[SerializeField] GameObject dotsParent;
-	[SerializeField] GameObject dotPrefab;
-	[SerializeField] float dotSpacing;
-	[SerializeField] [Range(0.01f, 0.3f)] float dotMinScale;
-	[SerializeField] [Range(0.3f, 1f)] float dotMaxScale;
+	[SerializeField] int dots_count;
+	[SerializeField] GameObject dots_parent;
+	[SerializeField] GameObject dot_prefab;
+	[SerializeField] [Range(0.01f, 0.3f)] float dots_min_scale;
+	[SerializeField] [Range(0.3f, 1f)] float dots_max_scale;
 
-	Transform[] dotsList;
+	Transform[] dots_list;
 	Vector2 pos;
 
-	float timeStamp;
+	float flight_duration;
+	float step_time;
+	float step_time_passed;
 
 
 	void Start()
@@ -25,19 +26,19 @@ public class TrajectoryMaker : MonoBehaviour
 
 	void PrepareDots()
 	{
-		dotsList = new Transform[dotsNumber];
-		dotPrefab.transform.localScale = Vector3.one * dotMaxScale;
+		dots_list = new Transform[dots_count];
+		dot_prefab.transform.localScale = Vector3.one * dots_max_scale;
 
-		float scale = dotMaxScale;
-		float scaleFactor = scale / dotsNumber;
+		float scale = dots_max_scale;
+		float scaleFactor = scale / dots_count;
 
-		for (int i = 0; i < dotsNumber; i++)
+		for (int i = 0; i < dots_count; i++)
 		{
-			dotsList[i] = Instantiate(dotPrefab, null).transform;
-			dotsList[i].parent = dotsParent.transform;
+			dots_list[i] = Instantiate(dot_prefab, null).transform;
+			dots_list[i].parent = dots_parent.transform;
 
-			dotsList[i].localScale = Vector3.one * scale;
-			if (scale > dotMinScale)
+			dots_list[i].localScale = Vector3.one * scale;
+			if (scale > dots_min_scale)
 				scale -= scaleFactor;
 		}
 	}
@@ -46,12 +47,11 @@ public class TrajectoryMaker : MonoBehaviour
 	{
 		Vector3 velocity = (forceApplied / rb.mass) * Time.fixedDeltaTime;
 
-		float flight_duration = (2 * velocity.y) / Physics.gravity.y;
+		flight_duration = (2 * velocity.y) / Physics.gravity.y;
 		flight_duration = flight_duration* 0.6f;
-		float step_time = flight_duration / dotsNumber;
-		float step_time_passed;
+		step_time = flight_duration / dots_count;
 
-		for(int i =0; i<dotsNumber; i++)
+		for(int i =0; i<dots_count; i++)
         {
 			step_time_passed = step_time * i;
 			pos = new Vector3(
@@ -59,18 +59,18 @@ public class TrajectoryMaker : MonoBehaviour
 				velocity.y*step_time_passed - 0.5f* Physics.gravity.y*step_time_passed*step_time_passed,
 				0);
 
-			dotsList[i].position = -pos+ballPos;
+			dots_list[i].position = -pos+ballPos;
 		}
 
 	}
 
 	public void Show()
 	{
-		dotsParent.SetActive(true);
+		dots_parent.SetActive(true);
 	}
 
 	public void Hide()
 	{
-		dotsParent.SetActive(false);
+		dots_parent.SetActive(false);
 	}
 }

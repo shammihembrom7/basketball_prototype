@@ -5,12 +5,11 @@ using UnityEngine;
 public class Gameplay : MonoBehaviour
 {
     // Initializations
-    private float deltaNx, deltaNy; // travel in Normalized PLane (Normalized PLane is the touch screen with 0,0 at the center.)
-    private float startNx, startNy, currentNx, currentNy; // coords in Normalized Plane
-    private float centerSx, centerSy; // center of touchScreen
-    private float balancerUnit;
+    private float delta_nx, delta_ny; // travel in Normalized PLane (Normalized PLane is the touch screen with 0,0 at the center.)
+    private float start_nx, start_ny, current_nx, current_ny; // coords in Normalized Plane
+    private float center_sx, center_sy; // center of touchScreen
+    private float balancer_unit;
 
-    Vector3 direction;
     [SerializeField] Rigidbody ball_rb;
     bool aiming;
 
@@ -20,9 +19,9 @@ public class Gameplay : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1.5f;
-        centerSx = Screen.width / 2;
-        centerSy = Screen.height / 2;
-        balancerUnit = (float)20 / Screen.height;
+        center_sx = Screen.width / 2;
+        center_sy = Screen.height / 2;
+        balancer_unit = (float)20 / Screen.height;
 
         trajectory = GetComponent<TrajectoryMaker>();
     }
@@ -34,30 +33,27 @@ public class Gameplay : MonoBehaviour
         if (Input.GetMouseButton(0)) Drag();
         if (Input.GetMouseButtonUp(0)) Release();
 
-        if (Input.GetKeyDown("space"))
-        {
-            ball_rb.AddForce((Vector3.right + Vector3.up * 2) * 450);
-        }
     }
 
+    #region ControlFunctions
     void Click()
     {
         aiming = true;
-        startNx = Input.mousePosition.x - centerSx;
-        startNy = Input.mousePosition.y - centerSy;
+        start_nx = Input.mousePosition.x - center_sx;
+        start_ny = Input.mousePosition.y - center_sy;
 
         trajectory.Show();
     }
 
     void Drag()
     {
-        currentNx = Input.mousePosition.x - centerSx;
-        currentNy = Input.mousePosition.y - centerSy;
+        current_nx = Input.mousePosition.x - center_sx;
+        current_ny = Input.mousePosition.y - center_sy;
 
-        deltaNx = ((currentNx - startNx) * balancerUnit);
-        deltaNy = ((currentNy - startNy) * balancerUnit);
+        delta_nx = ((current_nx - start_nx) * balancer_unit);
+        delta_ny = ((current_ny - start_ny) * balancer_unit);
 
-        trajectory.UpdateDots(ball_rb.transform.position, new Vector3(deltaNx, deltaNy,0) * -120,ball_rb);
+        trajectory.UpdateDots(ball_rb.transform.position, new Vector3(delta_nx, delta_ny,0) * -120,ball_rb);
     }
 
     void Release()
@@ -65,14 +61,15 @@ public class Gameplay : MonoBehaviour
         if (aiming)
         {
             aiming = false;
-            ball_rb.AddForce(new Vector3(deltaNx, deltaNy, 0) * -120);
+            ball_rb.AddForce(new Vector3(delta_nx, delta_ny, 0) * -120);
 
-            startNx = 0;
-            startNy = 0;
-            currentNx = 0;
-            currentNy = 0;
+            start_nx = 0;
+            start_ny = 0;
+            current_nx = 0;
+            current_ny = 0;
         }
 
         trajectory.Hide();
     }
+    #endregion ControlFunctions
 }
