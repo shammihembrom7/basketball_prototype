@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TrajectoryMaker : MonoBehaviour
 {
+	public static TrajectoryMaker instance;
+
 	[SerializeField] int dots_count;
 	[SerializeField] GameObject dots_parent;
 	[SerializeField] GameObject dot_prefab;
@@ -16,9 +18,12 @@ public class TrajectoryMaker : MonoBehaviour
 	float flight_duration;
 	float step_time;
 	float step_time_passed;
+    private void Awake()
+    {
+		instance = this;
+    }
 
-
-	void Start()
+    void Start()
 	{
 		Hide();
 		PrepareDots();
