@@ -12,7 +12,8 @@ public class BallController : MonoBehaviour
 
     bool ring_start_hit;
     bool is_dead;
-    bool is_still=true;
+    bool is_shot;
+    float flight_duration;
 
     Rigidbody ball_rb;
     bool aiming;
@@ -30,13 +31,23 @@ public class BallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!is_dead && is_still)
+        if (!is_dead && !is_shot)
         {
             if (Input.GetMouseButtonDown(0)) Click();
             if (Input.GetMouseButton(0)) Drag();
             if (Input.GetMouseButtonUp(0)) Release();
         }
 
+        if (is_shot && !is_dead)
+        {
+            flight_duration -= Time.deltaTime;
+            if (flight_duration < 0)
+            {
+                Gameplay.instance.IncrementScore(false);
+                ball_rb.constraints = RigidbodyConstraints.None;
+                is_dead = true;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,7 +62,7 @@ public class BallController : MonoBehaviour
             {
                 if (ring_start_hit)
                 {
-                    Gameplay.instance.IncrementScore();
+                    Gameplay.instance.IncrementScore(true);
                     ball_rb.constraints = RigidbodyConstraints.None;
                     is_dead = true;
                 }
@@ -77,7 +88,8 @@ public class BallController : MonoBehaviour
         delta_nx = ((current_nx - start_nx) * balancer_unit);
         delta_ny = ((current_ny - start_ny) * balancer_unit);
 
-        TrajectoryMaker.instance.UpdateDots(transform.position, new Vector3(delta_nx, delta_ny, 0) * -120, ball_rb);
+        flight_duration = TrajectoryMaker.instance.UpdateDots(transform.position, new Vector3(delta_nx, delta_ny, 0) * -120, ball_rb);
+        flight_duration = (flight_duration * -2)+1;
     }
 
     void Release()
@@ -86,7 +98,7 @@ public class BallController : MonoBehaviour
         {
             aiming = false;
             ball_rb.AddForce(new Vector3(delta_nx, delta_ny, 0) * -120);
-            is_still = false;
+            is_shot = true;
 
             start_nx = 0;
             start_ny = 0;

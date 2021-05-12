@@ -48,7 +48,7 @@ public class TrajectoryMaker : MonoBehaviour
 		}
 	}
 
-	public void UpdateDots(Vector2 ballPos, Vector3 forceApplied, Rigidbody rb)
+	public float UpdateDots(Vector2 ballPos, Vector3 forceApplied, Rigidbody rb)
 	{
 		Vector3 velocity = (forceApplied / rb.mass) * Time.fixedDeltaTime;
 
@@ -67,6 +67,7 @@ public class TrajectoryMaker : MonoBehaviour
 			dots_list[i].position = -pos+ballPos;
 		}
 
+		return flight_duration;
 	}
 
 	public void Show()

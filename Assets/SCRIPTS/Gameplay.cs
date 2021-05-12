@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Gameplay : MonoBehaviour
 {
     public static Gameplay instance;
 
+    [SerializeField] ParticleSystem dunk_particle_system;
+    [SerializeField] TextMeshProUGUI score_text;
     [SerializeField] GameObject ball_prefab;
     GameObject current_ball;
 
@@ -39,8 +42,14 @@ public class Gameplay : MonoBehaviour
         }
     }
 
-    public void IncrementScore()
+    public void IncrementScore(bool dunk)
     {
+        if (dunk)
+        {
+            score += 1;
+            dunk_particle_system.Play();
+            score_text.text = score.ToString();
+        }
         SpawnNewBall();
     }
 
